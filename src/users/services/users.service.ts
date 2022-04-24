@@ -66,6 +66,15 @@ export class UsersService {
     return true;
   }
 
+  async getOrderByUSer(id: number) {
+    const user = this.findOne(id);
+    return {
+      date: new Date(),
+      user,
+      products: await this.productsService.findAll(),
+    };
+  }
+
   getTasks(): Promise<{ id: number; title: string; completed: boolean }[]> {
     return new Promise((resolve, reject) => {
       this.client.query('SELECT * FROM tasks', (err, res) => {
