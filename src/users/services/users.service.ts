@@ -1,12 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { User } from '../entities/user.entity';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
+import { ProductsService } from '../../products/services/products.service';
+import { Client } from 'pg';
 
 @Injectable()
 export class UsersService {
-  constructor(private configService: ConfigService) {}
+  constructor(
+    private productsService: ProductsService,
+    private configService: ConfigService,
+    @Inject('PG') private client: Client,
+  ) {}
   private counterId = 1;
   private users: User[] = [
     {
@@ -20,7 +26,6 @@ export class UsersService {
   findAll() {
     const apiKey = this.configService.get('API_KEY');
     const dbName = this.configService.get('DATABASE_NAME');
-    console.log(apiKey, dbName);
     return this.users;
   }
 
@@ -59,5 +64,14 @@ export class UsersService {
     }
     this.users.splice(index, 1);
     return true;
+  }
+
+  getTasks(): Promise<{ id: number; title: string; completed: boolean }[]> {
+    return new Promise((resolve, reject) => {
+      this.client.query('SELECT * FROM tasks', (err, res) => {
+        if (err) reject(err);
+        else resolve(res.rows);
+      });
+    });
   }
 }
