@@ -11,15 +11,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       inject: [config.KEY],
       useFactory: (configService: ConfigType<typeof config>) => {
         const { username, host, database, password, port } =
-          configService.mysql;
+          configService.postgres;
         return {
-          type: 'mysql',
+          type: 'postgres',
           host,
           port,
           username,
           password,
           database,
-          synchronize: true,
+          synchronize: false,
           autoLoadEntities: true,
         };
       },
