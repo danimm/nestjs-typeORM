@@ -3,7 +3,10 @@ import {
   Column,
   Entity,
   CreateDateColumn,
+  OneToMany,
 } from 'typeorm';
+
+import { Product } from './product.entity';
 
 @Entity()
 export class Brand {
@@ -21,4 +24,7 @@ export class Brand {
 
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
+
+  @OneToMany((type) => Product, (product) => product.brand)
+  products: Product[];
 }
