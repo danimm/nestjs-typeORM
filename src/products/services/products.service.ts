@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -48,7 +52,46 @@ export class ProductsService {
     if (changes.brandId) {
       product.brand = await this.brandRepository.findOne(changes.brandId);
     }
+    if (changes.categoriesId) {
+      product.categories = await this.catergoryRepository.findByIds(
+        changes.categoriesId,
+      );
+    }
     this.productRepository.merge(product, changes);
+    return this.productRepository.save(product);
+  }
+
+  async removeCategoryByProduct(productId: number, categoryId: number) {
+    const product = await this.productRepository.findOne(productId, {
+      relations: ['categories'],
+    });
+    product.categories = product.categories.filter(
+      (category) => category.id !== categoryId,
+    );
+    return this.productRepository.save(product);
+  }
+
+  async addCategoryByProduct(productId: number, categoryId: number) {
+    const product = await this.productRepository.findOne(productId, {
+      relations: ['categories'],
+    });
+    if (!product) {
+      throw new NotFoundException(`Product #${productId} not found`);
+    }
+
+    const category = await this.catergoryRepository.findOne(categoryId);
+    if (!category) {
+      throw new NotFoundException(`Category #${categoryId} not found`);
+    }
+
+    if (!product.categories.find((cat) => cat.id === categoryId)) {
+      product.categories.push(category);
+    } else {
+      throw new ConflictException(
+        `Category #${categoryId} is already present in this product`,
+      );
+    }
+
     return this.productRepository.save(product);
   }
 
