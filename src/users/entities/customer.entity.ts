@@ -4,9 +4,11 @@ import {
   Entity,
   CreateDateColumn,
   OneToOne,
+  OneToMany,
 } from 'typeorm';
 
 import { User } from './user.entity';
+import { Order } from './order.entity';
 
 @Entity()
 export class Customer {
@@ -28,6 +30,9 @@ export class Customer {
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
-  @OneToOne((type) => User, (user) => user.customer, { nullable: true })
+  @OneToOne(() => User, (user) => user.customer, { nullable: true })
   user: User;
+
+  @OneToMany(() => Order, (order) => order.customer)
+  orders: Order[];
 }
