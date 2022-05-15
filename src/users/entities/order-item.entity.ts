@@ -3,8 +3,6 @@ import {
   Column,
   Entity,
   CreateDateColumn,
-  OneToOne,
-  OneToMany,
   ManyToOne,
 } from 'typeorm';
 

@@ -2,8 +2,8 @@ import {
   PrimaryGeneratedColumn,
   Entity,
   CreateDateColumn,
-  ManyToMany,
   OneToMany,
+  ManyToOne,
 } from 'typeorm';
 import { Customer } from './customer.entity';
 import { OrderItem } from './order-item.entity';
@@ -19,7 +19,7 @@ export class Order {
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
-  @ManyToMany((type) => Customer, (customer) => customer.orders)
+  @ManyToOne(() => Customer, (customer) => customer.orders)
   customer: Customer;
 
   @OneToMany(() => OrderItem, (item) => item.order)
