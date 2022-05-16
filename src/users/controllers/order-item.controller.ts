@@ -2,8 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  Param,
-  ParseIntPipe,
   Post,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';

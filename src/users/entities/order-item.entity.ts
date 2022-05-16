@@ -8,6 +8,7 @@ import {
 
 import { Product } from '../../products/entities/product.entity';
 import { Order } from './order.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class OrderItem {
@@ -17,9 +18,11 @@ export class OrderItem {
   @Column({ type: 'int' })
   quantity: number;
 
+  @Exclude()
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
+  @Exclude()
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
