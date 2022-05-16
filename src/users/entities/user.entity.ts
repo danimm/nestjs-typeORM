@@ -29,7 +29,7 @@ export class User {
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
-  @OneToOne((type) => Customer, (customer) => customer.user, { nullable: true })
-  @JoinColumn()
+  @OneToOne(() => Customer, (customer) => customer.user, { nullable: true })
+  @JoinColumn({ name: 'customer_id' })
   customer: Customer;
 }
